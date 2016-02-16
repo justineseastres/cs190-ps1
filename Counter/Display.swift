@@ -106,7 +106,7 @@ class Display: UIView {
         CGContextMoveToPoint(context, upperLeft.x, upperLeft.y)
         CGContextAddLineToPoint(context, upperRight.x, upperRight.y)
         CGContextAddLineToPoint(context, lowerRight.x, lowerRight.y)
-        CGContextAddLineToPoint(context, lowerRight.x, lowerLeft.y)
+        CGContextAddLineToPoint(context, lowerLeft.x, lowerLeft.y)
         CGContextAddLineToPoint(context, upperLeft.x, upperLeft.y)
         CGContextFillPath(context)
     }
@@ -149,6 +149,7 @@ class Display: UIView {
 
     // When you are done with this function, it should draw all 15 SSC's and it should use the masks array above to
     // make the 15 SSCs show -1.23456790 99.
+    
     // Except for the bug fix in drawSegment, there is no need to modify any code outside of this function.
     override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()!
@@ -156,10 +157,20 @@ class Display: UIView {
         let segmentHeight = bounds.size.height
         let xOrigin = bounds.origin.x
         let yOrigin = bounds.origin.y
-        // This needs re-doing. The segmentWidth is the whole view width. It should only be one-fifteenth of that.
-        let sscRect = CGRectMake(xOrigin, yOrigin, bounds.size.width, segmentHeight)
-        // This needs completing. It only draws one SSC. It needs to be put in a loop to show all 15 SSCs.
-        drawSSC(context, sscRect:sscRect, mask:segmentMasks[8])
+        
+    //Set variable Width, will be used later with displaying each SSC
+        var Width : CGFloat = 0
+    //Loop to show all 15 SSCs
+        for i in masks{
+            // This needs re-doing. The segmentWidth is the whole view width. It should only be one-fifteenth of that.
+            //Divide width by 15, and add Width to xOrigin to print subsequent SSC after the previous
+            let sscRect = CGRectMake(xOrigin + Width, yOrigin, bounds.size.width / 15, segmentHeight)
+            // Adds width to each SSC in order to avoid printing on top of each other and displays each one next to the other
+            Width += bounds.size.width/15
+            // This needs completing. It only draws one SSC. It needs to be put in a loop to show all 15 SSCs.
+                drawSSC(context, sscRect:sscRect,mask:i)
+        
+        }
+        }
+    
     }
-
-}
